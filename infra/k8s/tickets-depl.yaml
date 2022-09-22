@@ -1,38 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: auth-svc
+      app: tickets
   template:
     metadata:
-      name: auth-svc
       labels:
-        app: auth-svc
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: myonim/auth
+        - name: tickets
+          image: myonim/tickets
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-svc:27017/auth'
+              value: 'mongodb://tickets-mongo-svc:27017/tickets'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-  replicas: 1
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-svc
+  name: tickets-svc
 spec:
-  ports:
-    - port: 3000
-      targetPort: 3000
   selector:
-    app: auth-svc
+    app: tickets
+  ports:
+    - name: tickets
+      port: 3000
+      targetPort: 3000
