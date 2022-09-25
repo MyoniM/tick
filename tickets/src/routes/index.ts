@@ -3,7 +3,7 @@ import { Ticket } from '../models/ticket';
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: Request, res: Response) => {
   const tickets = await Ticket.find({});
 
   res.send(tickets);
