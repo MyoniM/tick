@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-depl
+  name: orders-mongo-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client
+      app: orders-mongo
   template:
     metadata:
       labels:
-        app: client
+        app: orders-mongo
     spec:
       containers:
-        - name: client
-          image: myonim/tick-client
+        - name: orders-mongo
+          image: mongo
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-svc
+  name: orders-mongo-svc
 spec:
   selector:
-    app: client
+    app: orders-mongo
   ports:
-    - name: client
-      port: 3000
-      targetPort: 3000
+    - name: db
+      port: 27017
+      targetPort: 27017

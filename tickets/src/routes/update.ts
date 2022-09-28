@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { validateRequest, NotFoundError, requireAuth, NotAuthorizedError } from '@ymtick/common';
+import { validateRequest, NotFoundError, requireAuth, NotAuthorizedError, BadRequestError } from '@ymtick/common';
 
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -23,6 +23,8 @@ router.put(
 
     if (ticket.userId !== req.currentUser!.id) throw new NotAuthorizedError();
 
+    if (ticket.orderId) throw new BadRequestError('Cannot edit a reserved ticket');
+
     ticket.set({ title: req.body.title, price: req.body.price });
     await ticket.save();
 
@@ -31,6 +33,7 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
 
     res.send(ticket);
