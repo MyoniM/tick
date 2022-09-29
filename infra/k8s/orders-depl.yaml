@@ -21,11 +21,11 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_URL
-              value: 'http://nats-svc:4222'
+              value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: ticketing
             - name: MONGO_URI
-              value: 'mongodb://orders-mongo-svc:27017/orders'
+              value: 'mongodb://orders-mongo-srv:27017/orders'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -35,11 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: orders-svc
+  name: orders-srv
 spec:
   selector:
     app: orders
   ports:
     - name: orders
+      protocol: TCP
       port: 3000
       targetPort: 3000
